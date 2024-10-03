@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2>Bienvenido, {{ user.username }}</h2>
+        <p>Has iniciado sesión en el sistema de asistencia.</p>
+    </div>
+</div>
+{% endblock %}

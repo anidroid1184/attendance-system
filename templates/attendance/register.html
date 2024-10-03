@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+{% block title %}Registro de Usuario{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="text-center">Registro de Usuario</h2>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form id="register-form" method="POST" data-departments-url="{% url 'ajax_load_regions' %}" data-cities-url="{% url 'ajax_load_cities' %}">{% csrf_token %}
+            
+                <!-- Estiliza el campo username -->
+                <div class="mb-3">
+                    <label for="id_username" class="form-label">Nombre de Usuario</label>
+                    {{ form.username|add_class:"form-control" }}
+                </div>
+            
+                <!-- Estiliza el campo email -->
+                <div class="mb-3">
+                    <label for="id_email" class="form-label">Correo Electrónico</label>
+                    {{ form.email|add_class:"form-control" }}
+                </div>
+            
+                <!-- Estiliza el campo document_id -->
+                <div class="mb-3">
+                    <label for="id_document_id" class="form-label">Documento de Identidad</label>
+                    {{ form.document_id|add_class:"form-control" }}
+                </div>
+            
+                <!-- Campo país -->
+                <div class="mb-3">
+                    <label for="id_country" class="form-label">País</label>
+                    {{ form.country|add_class:"form-select" }}
+                </div>
+
+                <!-- Campo departamento -->
+                <div class="mb-3">
+                    <label for="id_department" class="form-label">Region</label>
+                    {{ form.region|add_class:"form-select" }}
+                </div>
+
+                <!-- Campo ciudad -->
+                <div class="mb-3">
+                    <label for="id_city" class="form-label">Ciudad</label>
+                    {{ form.city|add_class:"form-select" }}
+                </div>
+                
+                <!-- Contraseña -->
+                <div class="mb-3">
+                    <label for="id_password1" class="form-label">Contraseña</label>
+                    {{ form.password1|add_class:"form-control" }}
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_password2" class="form-label">Confirmar Contraseña</label>
+                    {{ form.password2|add_class:"form-control" }}
+                </div>
+            
+                <!-- Campo política de tratamiento -->
+                <div class="mb-3">
+                    <label for="id_policy_accept" class="form-label">¿Acepta la política de tratamiento de datos?</label>
+                    <br>
+                    <div class="form-check form-check-inline">
+                        {{ form.policy_accept.as_widget }}
+                    </div>
+                </div>
+
+                <br>
+                <!-- Botón para enviar -->
+                <button type="submit" class="btn btn-danger">Registrarse</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Cargar el archivo custom.js para manejar las solicitudes AJAX -->
+<script src="{% static 'js/dinamic_place.js' %}"></script>
+{% endblock %}
+{% if form.errors %}
+    <div class="alert alert-danger">
+        <ul>
+        {% for field in form %}
+            {% for error in field.errors %}
+                <li>{{ field.label }}: {{ error }}</li>
+            {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+        </ul>
+    </div>
+{% endif %}

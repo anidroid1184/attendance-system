@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Marcar Asistencia{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Marcar Asistencia</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Enviar Asistencia</button>
+    </form>
+</div>
+{% endblock %}
