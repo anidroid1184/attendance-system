@@ -8,6 +8,7 @@ from cities_light.models import City, Region, Country
 
 # Modelo personalizado de usuario
 class CustomUser(AbstractUser):
+
     document_id = models.CharField(max_length=20, unique=True, blank=True, null=True)
     country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True, blank=True)
     region = models.ForeignKey(Region, on_delete=models.SET_NULL, null=True, blank=True)
@@ -43,6 +44,8 @@ class CustomUser(AbstractUser):
         blank=True,
         help_text='Specific permissions for this user.'
     )
+
+    # salvar informacion
 
     def __str__(self):
         return self.username  # Devuelve el nombre de usuario al imprimir el objeto

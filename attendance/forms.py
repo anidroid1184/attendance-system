@@ -94,8 +94,13 @@ class CustomUserCreationForm(UserCreationForm):
     # Guardado de los datos
     def save(self, commit=True):
         user = super().save(commit=False)
+        # Limpiar el registro
         user.email = self.cleaned_data['email']
         user.document_id = self.cleaned_data['document_id']
+        user.country = self.cleaned_data['country']
+        user.region = self.cleaned_data['region']
+        user.city = self.cleaned_data['city']
+
         if commit:
             user.save()
         return user

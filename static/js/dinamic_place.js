@@ -11,11 +11,11 @@ jQuery(document).ready(function () {
                 'country_id': countryId
             },
             success: function (data) {
-                jQuery('#id_department').html('');  // Limpiar el select de departamentos
+                jQuery('#id_region').html('');  // Limpiar el select de departamentos
                 jQuery.each(data, function (key, value) {
-                    jQuery('#id_department').append('<option value="' + value.id + '">' + value.name + '</option>');
+                    jQuery('#id_region').append('<option value="' + value.id + '">' + value.name + '</option>');
                 });
-                console.log("Departamentos cargados: ", data);  // Depuración
+                console.log("Regiones cargadas: ", data);  // Depuración
             },
             error: function (xhr, status, error) {
                 console.error("Error al cargar los departamentos: ", error);  // Depuración de errores
@@ -24,7 +24,7 @@ jQuery(document).ready(function () {
     });
 
     // Cuando se selecciona un departamento, cargar las ciudades correspondientes
-    jQuery('#id_department').change(function () {
+    jQuery('#id_region').change(function () {
         var url = jQuery("#register-form").attr("data-cities-url");
         var regionId = jQuery(this).val();
         console.log("Departamento seleccionado: ", regionId);  // Depuración
@@ -32,7 +32,7 @@ jQuery(document).ready(function () {
         jQuery.ajax({
             url: url,
             data: {
-                'department_id': regionId
+                'region_id': regionId
             },
             success: function (data) {
                 jQuery('#id_city').html('');  // Limpiar el select de ciudades
