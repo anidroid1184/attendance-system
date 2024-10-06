@@ -19,8 +19,9 @@
                 <div class="mb-3">
                     <label for="id_password">Contraseña</label>
                     {{ form.password }}
-                </div>
-
+                </div>  
+                <!--Redirigir a mark attendance-->
+                <input type="hidden" name="next" value="{% url 'mark-attendance' %}">
                 <button type="submit" class="btn btn-danger">Iniciar Sesión</button>
             </form>
         </div>

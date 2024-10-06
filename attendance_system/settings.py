@@ -116,7 +116,10 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Redireccionamiento a marcar asistencia
+LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = '/mark-attendance/'
+LOGOUT_REDIRECT_URL = '/login/'  # Por ejemplo, redirigir a la página de inicio de sesión
+
 
 
 # Internationalization

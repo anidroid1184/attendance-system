@@ -4,6 +4,7 @@ from .forms import CustomUserCreationForm
 from cities_light.models import Region, City
 from .forms import AttendanceForm
 from django.contrib.auth import login, authenticate
+from django.contrib.auth.decorators import login_required  # Para marcar asistencia tras loegarse
 from .forms import CustomLoginForm
 
 
@@ -62,14 +63,15 @@ def home(request):
     return render(request, 'attendance/home.html')
 
 # Vista para registrar asistencia
+@login_required
 def mark_attendance(request):
     if request.method == 'POST':
         form = AttendanceForm(request.POST)
         if form.is_valid():
             attendance = form.save(commit=False)
-            attendance.user = request.user
+            attendance.user = request.user  # Asegúrate de asignar el usuario autenticado
             attendance.save()
-            return redirect('home')
+            return redirect('home')  # O la vista a la que desees redirigir después
     else:
         form = AttendanceForm()
 

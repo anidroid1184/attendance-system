@@ -173,3 +173,4 @@ class AttendanceForm(forms.ModelForm):
             'status':'Estado de la Asistencia',
         }
 
+
