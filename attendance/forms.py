@@ -2,11 +2,17 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from cities_light.models import Country, Region, City  # Usamos los modelos de cities_light
 from .models import CustomUser, Attendance
-
+from django.contrib.auth.forms import AuthenticationForm
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
+
     document_id = forms.CharField(required=True)
+
+    full_name = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
 
     # Carga dinámica de país, región y ciudad usando los modelos de cities_light
     country = forms.ModelChoiceField(
@@ -30,7 +36,7 @@ class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = CustomUser
         fields = [
-            'username',
+            'full_name',
             'email',
             'document_id',
             'country',
@@ -42,7 +48,7 @@ class CustomUserCreationForm(UserCreationForm):
         ]
 
         widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'full_name': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'document_id': forms.TextInput(attrs={'class': 'form-control'}),
             'password1': forms.PasswordInput(attrs={'class': 'form-control'}),
@@ -51,7 +57,7 @@ class CustomUserCreationForm(UserCreationForm):
         }
 
         labels = {
-            'username': 'Ingrese su nombre completo',
+            'full_name': 'Ingrese su nombre completo',
             'email': 'Ingrese su correo electrónico',
             'document_id': 'Ingrese su documento de identidad',
             'policy_accept': '¿Acepta la política de tratamiento de datos?',
@@ -61,7 +67,7 @@ class CustomUserCreationForm(UserCreationForm):
         }
 
         error_messages = {
-            'username': {
+            'full_name': {
                 'max_length': "El nombre no puede ser mayor a 150 caracteres",
             },
             'email': {
@@ -104,6 +110,14 @@ class CustomUserCreationForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+
+# Autenticación personalizada con document id
+class CustomAuthenticationForm(AuthenticationForm):
+    username = forms.CharField(
+        label="Documento de identidad",
+        widget=forms.TextInput(attrs={'class':'form-control'})
+    )
 
 
 class AttendanceForm(forms.ModelForm):

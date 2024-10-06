@@ -15,9 +15,14 @@ def register(request):
             return redirect('home')
         else:
             print(f"Errores: {form.errors}")
+            print(form.errors.as_data())
+            # Aquí se renderiza el formulario con errores si no es válido
+            return render(request, 'attendance/register.html', {'form': form})
     else:
         form = CustomUserCreationForm()
     return render(request, 'attendance/register.html', {'form': form})
+
+
 
 # Vista para cargar regiones según el país seleccionado
 def load_regions(request):

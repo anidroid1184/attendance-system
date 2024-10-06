@@ -13,12 +13,35 @@
 
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <form id="register-form" method="POST" data-departments-url="{% url 'ajax_load_regions' %}" data-cities-url="{% url 'ajax_load_cities' %}">{% csrf_token %}
-            
+            <form id="register-form" method="POST" action="{% url 'register' %}" data-departments-url="{% url 'ajax_load_regions' %}" data-cities-url="{% url 'ajax_load_cities' %}">
+                {% csrf_token %}
+                
+                <!-- Mostrar errores del formulario en la parte superior -->
+                {% if form.errors %}
+                    <div class="alert alert-danger">
+                        <ul>
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                        {% for error in form.non_field_errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                <!-- Politica de trateminto de datos -->
+                <div>
+                    <p>
+                        Tratamineto de datos
+                    </p>
+                </div>
                 <!-- Estiliza el campo username -->
                 <div class="mb-3">
-                    <label for="id_username" class="form-label">Nombre de Usuario</label>
-                    {{ form.username|add_class:"form-control" }}
+                    <label for="id_full_name" class="form-label">Nombre de Usuario</label>
+                    {{ form.full_name|add_class:"form-control" }}
                 </div>
             
                 <!-- Estiliza el campo email -->
@@ -39,9 +62,9 @@
                     {{ form.country|add_class:"form-select" }}
                 </div>
 
-                <!-- Campo departamento -->
+                <!-- Campo región -->
                 <div class="mb-3">
-                    <label for="id_region" class="form-label">Region</label>
+                    <label for="id_region" class="form-label">Región</label>
                     {{ form.region|add_class:"form-select" }}
                 </div>
 
@@ -82,17 +105,3 @@
 <!-- Cargar el archivo custom.js para manejar las solicitudes AJAX -->
 <script src="{% static 'js/dinamic_place.js' %}"></script>
 {% endblock %}
-{% if form.errors %}
-    <div class="alert alert-danger">
-        <ul>
-        {% for field in form %}
-            {% for error in field.errors %}
-                <li>{{ field.label }}: {{ error }}</li>
-            {% endfor %}
-        {% endfor %}
-        {% for error in form.non_field_errors %}
-            <li>{{ error }}</li>
-        {% endfor %}
-        </ul>
-    </div>
-{% endif %}
