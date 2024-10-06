@@ -78,7 +78,7 @@ class CustomUser(AbstractUser):
     )
 
     USERNAME_FIELD = 'document_id'  # Identificador document_id
-    REQUIRED_FIELDS = ['full_name', 'email']  # campos obligatorios
+    REQUIRED_FIELDS = []  # campos obligatorios
     # salvar informacion
 
     def __str__(self):

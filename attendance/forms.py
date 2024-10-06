@@ -1,8 +1,12 @@
+from email.policy import default
+
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from cities_light.models import Country, Region, City  # Usamos los modelos de cities_light
 from .models import CustomUser, Attendance
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import get_user_model  # Para el login
+
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -118,6 +122,45 @@ class CustomAuthenticationForm(AuthenticationForm):
         label="Documento de identidad",
         widget=forms.TextInput(attrs={'class':'form-control'})
     )
+
+
+# Login form
+class CustomLoginForm(AuthenticationForm):
+    document_id = forms.CharField(
+        label="Documento de identidad",
+        max_length=20,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Documento de identidad', 'autofocus': True})
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class':'form-control'}),
+        label="Contraseña"
+    )
+
+
+    # Elminar campo de username
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Removemos  el campo de username
+        if 'username' in self.fields:
+            del self.fields['username']
+
+
+    def clean(self):
+        # Sobreescribimos el clean para que autentique con document_id
+        document_id = self.cleaned_data.get('document_id')
+        password = self.cleaned_data.get('password')
+
+        if document_id and password:
+            try:
+                # Se busca el usuario utilizando document_id
+                user = CustomUser.objects.get(document_id=document_id)
+                if not user.check_password(password):
+                    # Mostrar si la contraseña es incorrecta
+                    raise forms.ValidationError("Contraseña Incorrecta.")
+            except CustomUser.DoesNotExist:
+                # Validar si el documento de identidad es correcto
+                raise forms.ValidationError("Documento de identidad Incorrecto.")
+        return super().clean()
 
 
 class AttendanceForm(forms.ModelForm):
