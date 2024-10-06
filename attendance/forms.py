@@ -145,21 +145,25 @@ class CustomLoginForm(AuthenticationForm):
 
         if document_id and password:
             try:
-                # Se busca el usuario utilizando document_id
                 user = CustomUser.objects.get(document_id=document_id)
+                print(f"Usuario encontrado: {user}")
                 if not user.check_password(password):
-                    # Mostrar si la contraseña es incorrecta
+                    print("Contraseña incorrecta")
                     raise forms.ValidationError("Contraseña Incorrecta.")
+                print("Autenticación exitosa")
+                return self.cleaned_data
             except CustomUser.DoesNotExist:
-                # Validar si el documento de identidad es correcto
-                raise forms.ValidationError("Documento de identidad Incorrecto.")
-        return super().clean()
+                print("Documento de identidad incorrecto")
+                raise forms.ValidationError("Documento de identidad incorrecto.")
+        # return super().clean()
 
     def get_user(self):
-        # Este método se utiliza para devolver el usuario autenticado
+        # Devolver el usuario autenticado
         document_id = self.cleaned_data.get('document_id')
-        user = CustomUser.objects.get(document_id=document_id)
-        return user
+        try:
+            return CustomUser.objects.get(document_id=document_id)
+        except CustomUser.DoesNotExist:
+            return None
 
 
 class AttendanceForm(forms.ModelForm):

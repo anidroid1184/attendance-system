@@ -13,15 +13,15 @@
 
                 <div class="mb-3">
                     <label for="id_document_id">Documento de Identidad</label>
-                    {{ form.document_id }}
+                    {{ form.document_id|add_class:"form-control" }}
                 </div>
 
                 <div class="mb-3">
                     <label for="id_password">Contraseña</label>
-                    {{ form.password }}
-                </div>  
+                    {{ form.password|add_class:"form-control"}}
+                </div>
                 <!--Redirigir a mark attendance-->
-                <input type="hidden" name="next" value="{% url 'mark-attendance' %}">
+                <input type="hidden" name="next" value="{{ next}}">
                 <button type="submit" class="btn btn-danger">Iniciar Sesión</button>
             </form>
         </div>

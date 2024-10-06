@@ -25,7 +25,8 @@ class CustomUser(AbstractUser):
         max_length=20,
         unique=True,
         blank=True,
-        null=False
+        null=False,
+        default=000000
     )
     country = models.ForeignKey(
         Country,

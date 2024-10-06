@@ -35,14 +35,16 @@ def custom_login_view(request):
             password = form.cleaned_data.get('password')
             user = authenticate(request, document_id=document_id, password=password)
             if user is not None:
+                print(f'Inicio de sesión exitoso {user}')
                 login(request, user)
-                return redirect('home')  # Redirige a una página después de iniciar sesión
+                next_url = request.POST.get('next') or 'mark-attendance'
+                return redirect(next_url)  # Redirige a una página después de iniciar sesión
             else:
                 form.add_error(None, 'Credenciales incorrectas')
     else:
         form = CustomLoginForm()
 
-    return render(request, 'attendance/login.html', {'form': form})
+    return render(request, 'attendance/login.html', {'form': form, 'next': request.GET.get('next','')})
 
 
 # Vista para cargar regiones según el país seleccionado
@@ -63,8 +65,15 @@ def home(request):
     return render(request, 'attendance/home.html')
 
 # Vista para registrar asistencia
-@login_required
+@login_required(login_url='/login/')
 def mark_attendance(request):
+    # Verificar que el usuario esta autenticado
+    if request.user.is_authenticated:
+        print(f"Usuario autenticado: {request.user}")
+    else:
+        print("Usuario no autenticado")
+
+    # Registrar asistencia
     if request.method == 'POST':
         form = AttendanceForm(request.POST)
         if form.is_valid():
