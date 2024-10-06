@@ -116,20 +116,13 @@ class CustomUserCreationForm(UserCreationForm):
         return user
 
 
-# Autenticación personalizada con document id
-class CustomAuthenticationForm(AuthenticationForm):
-    username = forms.CharField(
-        label="Documento de identidad",
-        widget=forms.TextInput(attrs={'class':'form-control'})
-    )
-
-
 # Login form
 class CustomLoginForm(AuthenticationForm):
     document_id = forms.CharField(
         label="Documento de identidad",
         max_length=20,
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Documento de identidad', 'autofocus': True})
+        widget=forms.TextInput(
+            attrs={'class': 'form-control', 'autofocus': True})
     )
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={'class':'form-control'}),
@@ -142,7 +135,7 @@ class CustomLoginForm(AuthenticationForm):
         super().__init__(*args, **kwargs)
         # Removemos  el campo de username
         if 'username' in self.fields:
-            del self.fields['username']
+            self.fields.pop('username')
 
 
     def clean(self):
@@ -161,6 +154,12 @@ class CustomLoginForm(AuthenticationForm):
                 # Validar si el documento de identidad es correcto
                 raise forms.ValidationError("Documento de identidad Incorrecto.")
         return super().clean()
+
+    def get_user(self):
+        # Este método se utiliza para devolver el usuario autenticado
+        document_id = self.cleaned_data.get('document_id')
+        user = CustomUser.objects.get(document_id=document_id)
+        return user
 
 
 class AttendanceForm(forms.ModelForm):

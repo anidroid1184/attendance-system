@@ -115,6 +115,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Redireccionamiento a marcar asistencia
+LOGIN_REDIRECT_URL = '/mark-attendance/'
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/

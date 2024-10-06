@@ -3,7 +3,9 @@ from django.shortcuts import render, redirect
 from .forms import CustomUserCreationForm
 from cities_light.models import Region, City
 from .forms import AttendanceForm
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
+from .forms import CustomLoginForm
+
 
 # Vista para registro de usuario
 def register(request):
@@ -22,6 +24,24 @@ def register(request):
         form = CustomUserCreationForm()
     return render(request, 'attendance/register.html', {'form': form})
 
+
+def custom_login_view(request):
+    if request.method == 'POST':
+        form = CustomLoginForm(request.POST)
+        if form.is_valid():
+            # Autenticar con document_id
+            document_id = form.cleaned_data.get('document_id')
+            password = form.cleaned_data.get('password')
+            user = authenticate(request, document_id=document_id, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('home')  # Redirige a una página después de iniciar sesión
+            else:
+                form.add_error(None, 'Credenciales incorrectas')
+    else:
+        form = CustomLoginForm()
+
+    return render(request, 'attendance/login.html', {'form': form})
 
 
 # Vista para cargar regiones según el país seleccionado
