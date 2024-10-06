@@ -1,12 +1,22 @@
+from email.policy import default
+
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from cities_light.models import Country, Region, City  # Usamos los modelos de cities_light
 from .models import CustomUser, Attendance
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import get_user_model  # Para el login
 
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
+
     document_id = forms.CharField(required=True)
+
+    full_name = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
 
     # Carga dinámica de país, región y ciudad usando los modelos de cities_light
     country = forms.ModelChoiceField(
@@ -30,7 +40,7 @@ class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = CustomUser
         fields = [
-            'username',
+            'full_name',
             'email',
             'document_id',
             'country',
@@ -42,7 +52,7 @@ class CustomUserCreationForm(UserCreationForm):
         ]
 
         widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'full_name': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'document_id': forms.TextInput(attrs={'class': 'form-control'}),
             'password1': forms.PasswordInput(attrs={'class': 'form-control'}),
@@ -51,7 +61,7 @@ class CustomUserCreationForm(UserCreationForm):
         }
 
         labels = {
-            'username': 'Ingrese su nombre completo',
+            'full_name': 'Ingrese su nombre completo',
             'email': 'Ingrese su correo electrónico',
             'document_id': 'Ingrese su documento de identidad',
             'policy_accept': '¿Acepta la política de tratamiento de datos?',
@@ -61,7 +71,7 @@ class CustomUserCreationForm(UserCreationForm):
         }
 
         error_messages = {
-            'username': {
+            'full_name': {
                 'max_length': "El nombre no puede ser mayor a 150 caracteres",
             },
             'email': {
@@ -106,6 +116,56 @@ class CustomUserCreationForm(UserCreationForm):
         return user
 
 
+# Login form
+class CustomLoginForm(AuthenticationForm):
+    document_id = forms.CharField(
+        label="Documento de identidad",
+        max_length=20,
+        widget=forms.TextInput(
+            attrs={'class': 'form-control', 'autofocus': True})
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class':'form-control'}),
+        label="Contraseña"
+    )
+
+
+    # Elminar campo de username
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Removemos  el campo de username
+        if 'username' in self.fields:
+            self.fields.pop('username')
+
+
+    def clean(self):
+        # Sobreescribimos el clean para que autentique con document_id
+        document_id = self.cleaned_data.get('document_id')
+        password = self.cleaned_data.get('password')
+
+        if document_id and password:
+            try:
+                user = CustomUser.objects.get(document_id=document_id)
+                print(f"Usuario encontrado: {user}")
+                if not user.check_password(password):
+                    print("Contraseña incorrecta")
+                    raise forms.ValidationError("Contraseña Incorrecta.")
+                print("Autenticación exitosa")
+                return self.cleaned_data
+            except CustomUser.DoesNotExist:
+                print("Documento de identidad incorrecto")
+                raise forms.ValidationError("Documento de identidad incorrecto.")
+        # return super().clean()
+
+    def get_user(self):
+        # Devolver el usuario autenticado
+        document_id = self.cleaned_data.get('document_id')
+        try:
+            return CustomUser.objects.get(document_id=document_id)
+        except CustomUser.DoesNotExist:
+            return None
+
+
 class AttendanceForm(forms.ModelForm):
     class Meta:
         model = Attendance
@@ -116,4 +176,5 @@ class AttendanceForm(forms.ModelForm):
         labels = {
             'status':'Estado de la Asistencia',
         }
+
 

@@ -3,7 +3,10 @@ from django.shortcuts import render, redirect
 from .forms import CustomUserCreationForm
 from cities_light.models import Region, City
 from .forms import AttendanceForm
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.decorators import login_required  # Para marcar asistencia tras loegarse
+from .forms import CustomLoginForm
+
 
 # Vista para registro de usuario
 def register(request):
@@ -15,9 +18,34 @@ def register(request):
             return redirect('home')
         else:
             print(f"Errores: {form.errors}")
+            print(form.errors.as_data())
+            # Aquí se renderiza el formulario con errores si no es válido
+            return render(request, 'attendance/register.html', {'form': form})
     else:
         form = CustomUserCreationForm()
     return render(request, 'attendance/register.html', {'form': form})
+
+
+def custom_login_view(request):
+    if request.method == 'POST':
+        form = CustomLoginForm(request.POST)
+        if form.is_valid():
+            # Autenticar con document_id
+            document_id = form.cleaned_data.get('document_id')
+            password = form.cleaned_data.get('password')
+            user = authenticate(request, document_id=document_id, password=password)
+            if user is not None:
+                print(f'Inicio de sesión exitoso {user}')
+                login(request, user)
+                next_url = request.POST.get('next') or 'mark-attendance'
+                return redirect(next_url)  # Redirige a una página después de iniciar sesión
+            else:
+                form.add_error(None, 'Credenciales incorrectas')
+    else:
+        form = CustomLoginForm()
+
+    return render(request, 'attendance/login.html', {'form': form, 'next': request.GET.get('next','')})
+
 
 # Vista para cargar regiones según el país seleccionado
 def load_regions(request):
@@ -37,14 +65,22 @@ def home(request):
     return render(request, 'attendance/home.html')
 
 # Vista para registrar asistencia
+@login_required(login_url='/login/')
 def mark_attendance(request):
+    # Verificar que el usuario esta autenticado
+    if request.user.is_authenticated:
+        print(f"Usuario autenticado: {request.user}")
+    else:
+        print("Usuario no autenticado")
+
+    # Registrar asistencia
     if request.method == 'POST':
         form = AttendanceForm(request.POST)
         if form.is_valid():
             attendance = form.save(commit=False)
-            attendance.user = request.user
+            attendance.user = request.user  # Asegúrate de asignar el usuario autenticado
             attendance.save()
-            return redirect('home')
+            return redirect('home')  # O la vista a la que desees redirigir después
     else:
         form = AttendanceForm()
 

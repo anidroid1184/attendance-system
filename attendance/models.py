@@ -1,3 +1,4 @@
+from django.core.validators import RegexValidator
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 # from django_countries.fields import CountryField  # Asegúrate de tener django-countries instalado
@@ -8,11 +9,43 @@ from cities_light.models import City, Region, Country
 
 # Modelo personalizado de usuario
 class CustomUser(AbstractUser):
+    username = None # Descartamos el uso de username
 
-    document_id = models.CharField(max_length=20, unique=True, blank=True, null=True)
-    country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True, blank=True)
-    region = models.ForeignKey(Region, on_delete=models.SET_NULL, null=True, blank=True)
-    city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, blank=True)
+    # Añadimos un campo para el nombre completo
+
+    full_name = models.CharField(
+        max_length=100,
+        validators=[RegexValidator(
+            regex='^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$',
+            message='El nombre solo puede contener letras y espacios'
+        )],
+        default='No name'
+    )
+    document_id = models.CharField(
+        max_length=20,
+        unique=True,
+        blank=True,
+        null=False,
+        default=000000
+    )
+    country = models.ForeignKey(
+        Country,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+    region = models.ForeignKey(
+        Region,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+    city = models.ForeignKey(
+        City
+        , on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
 
 
     document_id_type = models.CharField
@@ -45,10 +78,12 @@ class CustomUser(AbstractUser):
         help_text='Specific permissions for this user.'
     )
 
+    USERNAME_FIELD = 'document_id'  # Identificador document_id
+    REQUIRED_FIELDS = []  # campos obligatorios
     # salvar informacion
 
     def __str__(self):
-        return self.username  # Devuelve el nombre de usuario al imprimir el objeto
+        return self.full_name  # Devuelve el nombre de usuario al imprimir el objeto
 
 
 # Modelo de asistencia
@@ -74,4 +109,4 @@ class Attendance(models.Model):
     date = models.DateField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.user.username} - {self.get_status_display()} - {self.date}'
+        return f'{self.user.name} - {self.get_status_display()} - {self.date}'

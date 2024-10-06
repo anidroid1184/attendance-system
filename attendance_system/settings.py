@@ -91,7 +91,11 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
-AUHT_USER_MODEL = 'attendance.CustomUser'  # Crear campos de formulario personalizados
+AUTH_USER_MODEL = 'attendance.CustomUser'  # Crear campos de formulario personalizados
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -110,6 +114,14 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+# Redireccionamiento a marcar asistencia
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'mark-attendance'  # O la URL a la que quieres redirigir después del login
+
+
+SESSION_COOKIE_AGE = 1209600  # La sesión dura dos semanas (en segundos)
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Utiliza el backend de base de datos
 
 
 # Internationalization
