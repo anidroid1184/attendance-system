@@ -6,7 +6,6 @@ from django.conf import settings
 from cities_light.models import City, Region, Country
 
 
-
 # Modelo personalizado de usuario
 class CustomUser(AbstractUser):
     username = None # Descartamos el uso de username
@@ -16,7 +15,7 @@ class CustomUser(AbstractUser):
     full_name = models.CharField(
         max_length=100,
         validators=[RegexValidator(
-            regex='^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$',
+            regex=r'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$',
             message='El nombre solo puede contener letras y espacios'
         )],
         default='No name'
@@ -109,4 +108,5 @@ class Attendance(models.Model):
     date = models.DateField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.user.name} - {self.get_status_display()} - {self.date}'
+        return f'{self.user.full_name} - {self.get_status_display()} - {self.date}'
+

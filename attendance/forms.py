@@ -1,5 +1,4 @@
 from email.policy import default
-
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from cities_light.models import Country, Region, City  # Usamos los modelos de cities_light
