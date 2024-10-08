@@ -1,41 +1,22 @@
 from django.core.validators import RegexValidator
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+# from django_countries.fields import CountryField  # Asegúrate de tener django-countries instalado
 from django.conf import settings
 from cities_light.models import City, Region, Country
-from django.contrib.auth.models import BaseUserManager
 
-
-class CustomUserManager(BaseUserManager):
-    def create_user(self, document_id, password=None, **extra_fields):
-        if not document_id:
-            raise ValueError('El campo Document ID debe estar definido')
-        user = self.model(document_id=document_id, **extra_fields)
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
-
-    def create_superuser(self, document_id, password=None, **extra_fields):
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
-
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError('El superusuario debe tener is_staff=True.')
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError('El superusuario debe tener is_superuser=True.')
-
-        return self.create_user(document_id, password, **extra_fields)
 
 
 # Modelo personalizado de usuario
 class CustomUser(AbstractUser):
-    username = None  # Descartamos el uso de username
+    username = None # Descartamos el uso de username
 
     # Añadimos un campo para el nombre completo
+
     full_name = models.CharField(
         max_length=100,
         validators=[RegexValidator(
-            regex=r'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$',
+            regex='^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$',
             message='El nombre solo puede contener letras y espacios'
         )],
         default='No name'
@@ -45,7 +26,7 @@ class CustomUser(AbstractUser):
         unique=True,
         blank=True,
         null=False,
-        default="000000"  # Cambiar a cadena
+        default=000000
     )
     country = models.ForeignKey(
         Country,
@@ -60,12 +41,14 @@ class CustomUser(AbstractUser):
         blank=True
     )
     city = models.ForeignKey(
-        City,
-        on_delete=models.SET_NULL,
+        City
+        , on_delete=models.SET_NULL,
         null=True,
         blank=True
     )
 
+
+    document_id_type = models.CharField
     # Opciones para la política de tratamiento
     POLICY_CHOICES = [
         ('S', 'Sí'),
@@ -97,8 +80,7 @@ class CustomUser(AbstractUser):
 
     USERNAME_FIELD = 'document_id'  # Identificador document_id
     REQUIRED_FIELDS = []  # campos obligatorios
-
-    objects = CustomUserManager()
+    # salvar informacion
 
     def __str__(self):
         return self.full_name  # Devuelve el nombre de usuario al imprimir el objeto
@@ -106,16 +88,14 @@ class CustomUser(AbstractUser):
 
 # Modelo de asistencia
 class Attendance(models.Model):
-    # Relación con el usuario personalizado
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-
     # Opciones de asistencia
     ATTENDANCE_CHOICES = [
         ('P', 'Presencial'),
         ('V', 'Virtual'),
     ]
 
-
+    # Relación con el usuario personalizado
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     # Estado de la asistencia
     status = models.CharField(
@@ -128,10 +108,5 @@ class Attendance(models.Model):
     # Fecha del registro de asistencia
     date = models.DateField(auto_now_add=True)
 
-    # Restricción para asegurar unicidad de asistencia por usuario y fecha
-    class Meta:
-        unique_together = ('user', 'date')
-
     def __str__(self):
-        user: 'CustomUser'
-        return f'{self.user.full_name} - {self.get_status_display()} - {self.date}'
+        return f'{self.user.name} - {self.get_status_display()} - {self.date}'
