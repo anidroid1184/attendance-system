@@ -3,26 +3,41 @@
 {% block title %}Iniciar Sesión{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <h2 class="text-center">Iniciar Sesión</h2>
+            <h2 class="text-center mb-4">Iniciar Sesión</h2>
             <form method="POST" action="{% url 'login' %}">
                 {% csrf_token %}
-                {{ form.non_field_errors }}
-
+                <!-- Mostrar errores generales -->
+                {% if form.non_field_errors %}
+                <div class="alert alert-danger" role="alert">
+                    <ul>
+                        {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                
+                <!-- Documento de identidad -->
                 <div class="mb-3">
-                    <label for="id_document_id">Documento de Identidad</label>
+                    <label for="id_document_id" class="form-label">Documento de Identidad</label>
                     {{ form.document_id|add_class:"form-control" }}
+                    <small class="form-text text-muted">
+                        Ingrese su documento de identidad registrado.
+                    </small>
                 </div>
 
+                <!-- Contraseña -->
                 <div class="mb-3">
-                    <label for="id_password">Contraseña</label>
+                    <label for="id_password" class="form-label">Contraseña</label>
                     {{ form.password|add_class:"form-control"}}
+                    <small class="form-text text-muted">
+                        Introduzca la contraseña que registró.
+                    </small>
                 </div>
-                <!--Redirigir a mark attendance-->
-                <input type="hidden" name="next" value="{{ next}}">
-                <button type="submit" class="btn btn-danger">Iniciar Sesión</button>
+            
             </form>
         </div>
     </div>

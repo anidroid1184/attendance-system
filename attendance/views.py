@@ -7,11 +7,9 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required  # Para marcar asistencia tras loegarse
 from .forms import forms, CustomLoginForm
 from .models import Attendance, CustomUser
-from django.contrib.auth.decorators import user_passes_test # Filtrar asistencia
 from django.db.models import Count, Q
-from datetime import timedelta
 from django.utils import timezone
-
+from django.contrib import messages
 
 
 # Vista para registro de usuario
@@ -21,6 +19,7 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
+            messages.success(request, '¡Registro exitoso! Ahora puede iniciar sesión.')
             return redirect('home')
         else:
             print(f"Errores: {form.errors}")
