@@ -4,7 +4,7 @@
 {% block title %}Registro de Usuario{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container mt-4">
     <div class="row justify-content-center">
         <div class="col-md-6">
             <h2 class="text-center">Registro de Usuario</h2>
@@ -15,47 +15,41 @@
         <div class="col-md-6">
             <form id="register-form" method="POST" action="{% url 'register' %}" data-departments-url="{% url 'ajax_load_regions' %}" data-cities-url="{% url 'ajax_load_cities' %}">
                 {% csrf_token %}
-                
+
                 <!-- Mostrar errores del formulario en la parte superior -->
                 {% if form.errors %}
                     <div class="alert alert-danger">
                         <ul>
-                        {% for field in form %}
-                            {% for error in field.errors %}
-                                <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                                {% endfor %}
                             {% endfor %}
-                        {% endfor %}
-                        {% for error in form.non_field_errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
                         </ul>
                     </div>
                 {% endif %}
 
-                <!-- Politica de trateminto de datos -->
-                <div>
-                    <p>
-                        Tratamineto de datos
-                    </p>
-                </div>
-                <!-- Estiliza el campo username -->
+                <!-- Campo nombre de usuario -->
                 <div class="mb-3">
-                    <label for="id_full_name" class="form-label">Nombre de Usuario</label>
+                    <label for="id_full_name" class="form-label">Nombre Completo</label>
                     {{ form.full_name|add_class:"form-control" }}
                 </div>
-            
-                <!-- Estiliza el campo email -->
+
+                <!-- Campo correo electrónico -->
                 <div class="mb-3">
                     <label for="id_email" class="form-label">Correo Electrónico</label>
                     {{ form.email|add_class:"form-control" }}
                 </div>
-            
-                <!-- Estiliza el campo document_id -->
+
+                <!-- Campo documento de identidad -->
                 <div class="mb-3">
                     <label for="id_document_id" class="form-label">Documento de Identidad</label>
                     {{ form.document_id|add_class:"form-control" }}
                 </div>
-            
+
                 <!-- Campo país -->
                 <div class="mb-3">
                     <label for="id_country" class="form-label">País</label>
@@ -73,7 +67,7 @@
                     <label for="id_city" class="form-label">Ciudad</label>
                     {{ form.city|add_class:"form-select" }}
                 </div>
-                
+
                 <!-- Contraseña -->
                 <div class="mb-3">
                     <label for="id_password1" class="form-label">Contraseña</label>
@@ -84,19 +78,31 @@
                     <label for="id_password2" class="form-label">Confirmar Contraseña</label>
                     {{ form.password2|add_class:"form-control" }}
                 </div>
-            
+
                 <!-- Campo política de tratamiento -->
                 <div class="mb-3">
-                    <label for="id_policy_accept" class="form-label">¿Acepta la política de tratamiento de datos?</label>
+                    <label for="id_policy_accept" class="form-label mt-3">Política de Tratamiento de datos</label>
+                    <div class="card p-3">
+                        <p class="text-justify">
+                            <strong>La Universidad del Valle sede Cartago</strong> informa que este formulario recolecta información de los asistentes a la EIFA 2024: 
+                            <em>"La ingeniería para los retos del siglo XXI"</em> interesados en participar en el evento. Los datos aquí registrados serán tratados de acuerdo a lo consagrado en la Ley 1581 del 2012.
+                            Le informamos que los datos que usted suministre en virtud de las actividades u operaciones celebradas con la Institución, serán tratados de acuerdo a nuestra 
+                            <strong>Política de Protección de Datos Personales</strong>, la cual tiene como fin poner en conocimiento del titular del dato la regulación interna adoptada por Universidad del Valle.
+                        </p>
+                        
+                    </div>
+                    <br>
+                    <label for="id_policy_accept" class="form-label mt-3">¿Acepta la política de tratamiento de datos?</label>
                     <br>
                     <div class="form-check form-check-inline">
                         {{ form.policy_accept.as_widget }}
                     </div>
                 </div>
-
-                <br>
+                
                 <!-- Botón para enviar -->
-                <button type="submit" class="btn btn-danger">Registrarse</button>
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-danger">Registrarse</button>
+                </div>
             </form>
         </div>
     </div>
