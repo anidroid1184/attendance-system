@@ -1,17 +1,12 @@
-from email.policy import default
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
-from cities_light.models import Country, Region, City  # Usamos los modelos de cities_light
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from cities_light.models import Country, Region, City
 from .models import CustomUser, Attendance
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import get_user_model  # Para el login
 
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
-
     document_id = forms.CharField(required=True)
-
     full_name = forms.CharField(
         required=True,
         widget=forms.TextInput(attrs={'class': 'form-control'})
@@ -23,15 +18,13 @@ class CustomUserCreationForm(UserCreationForm):
         required=True,
         widget=forms.Select(attrs={'class': 'form-control'})
     )
-
     region = forms.ModelChoiceField(
-        queryset=Region.objects.none(),  # Se cargará dinámicamente
+        queryset=Region.objects.none(),
         required=True,
         widget=forms.Select(attrs={'class': 'form-control'})
     )
-
     city = forms.ModelChoiceField(
-        queryset=City.objects.none(),  # Se cargará dinámicamente
+        queryset=City.objects.none(),
         required=True,
         widget=forms.Select(attrs={'class': 'form-control'})
     )
@@ -49,7 +42,6 @@ class CustomUserCreationForm(UserCreationForm):
             'password1',
             'password2'
         ]
-
         widgets = {
             'full_name': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
@@ -58,7 +50,6 @@ class CustomUserCreationForm(UserCreationForm):
             'password2': forms.PasswordInput(attrs={'class': 'form-control'}),
             'policy_accept': forms.RadioSelect(attrs={'class': 'form-check-input'}),
         }
-
         labels = {
             'full_name': 'Ingrese su nombre completo',
             'email': 'Ingrese su correo electrónico',
@@ -67,18 +58,6 @@ class CustomUserCreationForm(UserCreationForm):
             'country': 'Seleccione su país de origen',
             'region': 'Seleccione su región o departamento',
             'city': 'Seleccione su ciudad de origen'
-        }
-
-        error_messages = {
-            'full_name': {
-                'max_length': "El nombre no puede ser mayor a 150 caracteres",
-            },
-            'email': {
-                'max_length': "El correo no puede ser mayor a 254 caracteres",
-            },
-            'document_id': {
-                'max_length': "El documento de identidad no puede ser mayor a 20 caracteres",
-            },
         }
 
     # Sobreescribimos el init para cargar las regiones y ciudades dinámicamente
@@ -103,66 +82,52 @@ class CustomUserCreationForm(UserCreationForm):
     # Guardado de los datos
     def save(self, commit=True):
         user = super().save(commit=False)
-        # Limpiar el registro
         user.email = self.cleaned_data['email']
         user.document_id = self.cleaned_data['document_id']
         user.country = self.cleaned_data['country']
         user.region = self.cleaned_data['region']
         user.city = self.cleaned_data['city']
-
         if commit:
             user.save()
         return user
 
 
-# Login form
 class CustomLoginForm(AuthenticationForm):
     document_id = forms.CharField(
         label="Documento de identidad",
         max_length=20,
-        widget=forms.TextInput(
-            attrs={'class': 'form-control', 'autofocus': True})
+        widget=forms.TextInput(attrs={'class': 'form-control', 'autofocus': True})
     )
     password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class':'form-control'}),
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
         label="Contraseña"
     )
 
-
-    # Elminar campo de username
+    # Eliminar campo de username
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Removemos  el campo de username
         if 'username' in self.fields:
             self.fields.pop('username')
 
-
     def clean(self):
-        # Sobreescribimos el clean para que autentique con document_id
-        document_id = self.cleaned_data.get('document_id')
-        password = self.cleaned_data.get('password')
+        # Llamamos a clean de la clase base
+        cleaned_data = super().clean()
+        document_id = cleaned_data.get('document_id')
+        password = cleaned_data.get('password')
 
         if document_id and password:
             try:
                 user = CustomUser.objects.get(document_id=document_id)
-                print(f"Usuario encontrado: {user}")
                 if not user.check_password(password):
-                    print("Contraseña incorrecta")
-                    raise forms.ValidationError("Contraseña Incorrecta.")
-                print("Autenticación exitosa")
-                return self.cleaned_data
+                    raise forms.ValidationError("Contraseña incorrecta.")
+                self.cleaned_data['user'] = user
             except CustomUser.DoesNotExist:
-                print("Documento de identidad incorrecto")
                 raise forms.ValidationError("Documento de identidad incorrecto.")
-        # return super().clean()
+
+        return self.cleaned_data
 
     def get_user(self):
-        # Devolver el usuario autenticado
-        document_id = self.cleaned_data.get('document_id')
-        try:
-            return CustomUser.objects.get(document_id=document_id)
-        except CustomUser.DoesNotExist:
-            return None
+        return self.cleaned_data.get('user')
 
 
 class AttendanceForm(forms.ModelForm):
@@ -170,10 +135,8 @@ class AttendanceForm(forms.ModelForm):
         model = Attendance
         fields = ['status']  # Campo de asistencia
         widgets = {
-            'status':forms.RadioSelect(),
+            'status': forms.RadioSelect(),
         }
         labels = {
-            'status':'Estado de la Asistencia',
+            'status': 'Estado de la Asistencia',
         }
-
-

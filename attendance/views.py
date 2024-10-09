@@ -10,6 +10,8 @@ from .models import Attendance, CustomUser
 from django.contrib.auth.decorators import user_passes_test # Filtrar asistencia
 from django.db.models import Count, Q
 from datetime import timedelta
+from django.utils import timezone
+
 
 
 # Vista para registro de usuario
@@ -69,22 +71,25 @@ def home(request):
     return render(request, 'attendance/home.html')
 
 # Vista para registrar asistencia
+
 @login_required(login_url='/login/')
 def mark_attendance(request):
-    # Verificar que el usuario esta autenticado
-    if request.user.is_authenticated:
-        print(f"Usuario autenticado: {request.user}")
-    else:
-        print("Usuario no autenticado")
-
-    # Registrar asistencia
     if request.method == 'POST':
         form = AttendanceForm(request.POST)
         if form.is_valid():
-            attendance = form.save(commit=False)
-            attendance.user = request.user  # Asegúrate de asignar el usuario autenticado
-            attendance.save()
-            return redirect('home')  # O la vista a la que desees redirigir después
+            # Obtener el usuario y la fecha actual
+            user = request.user
+            today = timezone.now().date()
+
+            # Verificar si ya existe un registro de asistencia para el usuario y la fecha
+            attendance, created = Attendance.objects.get_or_create(user=user, date=today)
+            if not created:
+                form.add_error(None, 'Ya has registrado asistencia para hoy.')
+            else:
+                attendance.status = form.cleaned_data['status']
+                attendance.save()
+                return redirect('home')  # Redirigir después de guardar
+
     else:
         form = AttendanceForm()
 
