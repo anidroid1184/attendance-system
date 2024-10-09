@@ -25,7 +25,7 @@ class CustomUserCreationForm(UserCreationForm):
     )
     city = forms.ModelChoiceField(
         queryset=City.objects.none(),
-        required=True,
+        required=False,
         widget=forms.Select(attrs={'class': 'form-control'})
     )
 
