@@ -96,6 +96,7 @@ class DateRangeForm(forms.Form):
     start_date = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}), label="Fecha de inicio")
     end_date = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}), label="Fecha de fin")
 
+PORCENTAJE = 0.7
 def attendance_summary(request):
     form = DateRangeForm(request.GET or None)
     users_with_70_percent = []
@@ -106,7 +107,7 @@ def attendance_summary(request):
 
         # Contar las asistencias y comparar con el 70% en el rango de fechas
         total_days = (end_date - start_date).days + 1
-        required_attendance = int(0.7 * total_days)
+        required_attendance = int(PORCENTAJE * total_days)
 
         users_with_70_percent = CustomUser.objects.annotate(
             attendance_count=Count('attendance', filter=Q(attendance__date__range=(start_date, end_date)))
