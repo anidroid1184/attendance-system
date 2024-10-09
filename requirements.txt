@@ -1,0 +1,4 @@
+pip~=23.2.1
+Django~=5.1.1
+django-cities-light~=3.10.1
+django-countries~=7.6.1
