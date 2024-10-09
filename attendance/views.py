@@ -5,7 +5,11 @@ from cities_light.models import Region, City
 from .forms import AttendanceForm
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required  # Para marcar asistencia tras loegarse
-from .forms import CustomLoginForm
+from .forms import forms, CustomLoginForm
+from .models import Attendance, CustomUser
+from django.contrib.auth.decorators import user_passes_test # Filtrar asistencia
+from django.db.models import Count, Q
+from datetime import timedelta
 
 
 # Vista para registro de usuario
@@ -85,3 +89,27 @@ def mark_attendance(request):
         form = AttendanceForm()
 
     return render(request, 'attendance/mark_attendance.html', {'form': form})
+
+
+# Formulario para seleccionar el rango de fechas
+class DateRangeForm(forms.Form):
+    start_date = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}), label="Fecha de inicio")
+    end_date = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}), label="Fecha de fin")
+
+def attendance_summary(request):
+    form = DateRangeForm(request.GET or None)
+    users_with_70_percent = []
+
+    if form.is_valid():
+        start_date = form.cleaned_data['start_date']
+        end_date = form.cleaned_data['end_date']
+
+        # Contar las asistencias y comparar con el 70% en el rango de fechas
+        total_days = (end_date - start_date).days + 1
+        required_attendance = int(0.7 * total_days)
+
+        users_with_70_percent = CustomUser.objects.annotate(
+            attendance_count=Count('attendance', filter=Q(attendance__date__range=(start_date, end_date)))
+        ).filter(attendance_count__gte=required_attendance)
+
+    return render(request, 'attendance/attendance_summary.html', {'form': form, 'users': users_with_70_percent})
