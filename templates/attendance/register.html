@@ -34,53 +34,69 @@
 
                 <!-- Campo nombre de usuario -->
                 <div class="mb-3">
-                    <label for="id_full_name" class="form-label">Nombre Completo</label>
+                    <label for="id_full_name" class="form-label">Ingrese su nombre completo</label>
                     {{ form.full_name|add_class:"form-control" }}
+                    <small id="passwordHelpBlock" class="form-text text-muted">
+                       Ingrese tanto nombres como apellidos.
+                    </small>
                 </div>
 
                 <!-- Campo correo electrónico -->
                 <div class="mb-3">
                     <label for="id_email" class="form-label">Correo Electrónico</label>
                     {{ form.email|add_class:"form-control" }}
+                    <small id="emailHelp" class="form-text text-muted">
+                        Ingrese su correo electrónico, este unícamente será usado para el registro.
+                    </small>
                 </div>
 
                 <!-- Campo documento de identidad -->
                 <div class="mb-3">
-                    <label for="id_document_id" class="form-label">Documento de Identidad</label>
+                    <label for="id_document_id" class="form-label">ingrese su documento de identidad</label>
                     {{ form.document_id|add_class:"form-control" }}
+                    <small id="documentIdHelpBlock" class="form-text text-muted">
+                        Ingrese su documento de identidad, deben ser solo números, este es único para cada usuario.
+                    </small>
                 </div>
 
                 <!-- Campo país -->
                 <div class="mb-3">
-                    <label for="id_country" class="form-label">País</label>
+                    <label for="id_country" class="form-label">Seleccione su país de residencia.</label>
                     {{ form.country|add_class:"form-select" }}
                 </div>
 
                 <!-- Campo región -->
                 <div class="mb-3">
-                    <label for="id_region" class="form-label">Región</label>
+                    <label for="id_region" class="form-label">Seleccione su región de residencia.</label>
                     {{ form.region|add_class:"form-select" }}
                 </div>
 
                 <!-- Campo ciudad -->
                 <div class="mb-3">
-                    <label for="id_city" class="form-label">Ciudad</label>
-                        <p class="text-justify">
-                            <em>Este campo es opcional.</em>
-                        </p>
-
+                    <label for="id_city" class="form-label">Seleccione su ciudad de residencia.</label>
                     {{ form.city|add_class:"form-select" }}
+                    <small id="passwordHelpBlock" class="form-text text-muted">
+                        No se preocupe si no aparece en la lista de selección, este campo es opcional y puede continuar con el registro.
+                    </small>
                 </div>
 
                 <!-- Contraseña -->
                 <div class="mb-3">
                     <label for="id_password1" class="form-label">Contraseña</label>
                     {{ form.password1|add_class:"form-control" }}
+                    <small id="passwordHelpBlock" class="form-text text-muted">
+                        Tu contraseña debe tener entre 8-20 caracteres, contener letras, numeros y caracteres especiales, no debe contener espacios o emojis.
+                        Si aparece algun caracter no permitido, entonces no se permitira el registro con esa contraseña y debera cambiarla.
+                    </small>
                 </div>
 
                 <div class="mb-3">
                     <label for="id_password2" class="form-label">Confirmar Contraseña</label>
                     {{ form.password2|add_class:"form-control" }}
+                    <small id="passwordHelpBlock" class="form-text text-muted">
+                       Ingrese de nuevo la contraseña que acaba de ingresar en el anterior campo para confirmarla.
+                        Debe ser exactamente igual a la de arriba.
+                    </small>
                 </div>
 
                 <!-- Campo política de tratamiento -->
