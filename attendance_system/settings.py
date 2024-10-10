@@ -123,18 +123,18 @@ AUTH_PASSWORD_VALIDATORS = [
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'mark-attendance'  # O la URL a la que quieres redirigir después del login
 
+
 SESSION_COOKIE_AGE = 1209600  # La sesión dura dos semanas (en segundos)
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Utiliza el backend de base de datos
 
-
-# Recuperación de clave
-
+# recuperacion contraseña
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'recuperacionclaveeifa@gmail.com'  # Aquí pones tu correo de Gmail
 EMAIL_HOST_PASSWORD = 'kinc aeyl ydoq rhzn'
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/

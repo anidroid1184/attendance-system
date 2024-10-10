@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from cities_light.models import Country, Region, City
 from .models import CustomUser, Attendance
-
+from django.contrib.auth.forms import PasswordResetForm
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -130,6 +130,14 @@ class CustomLoginForm(AuthenticationForm):
         return self.cleaned_data.get('user')
 
 
+
+class CustomPasswordResetForm(PasswordResetForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+
+
 class AttendanceForm(forms.ModelForm):
     class Meta:
         model = Attendance
@@ -138,5 +146,5 @@ class AttendanceForm(forms.ModelForm):
             'status': forms.RadioSelect(),
         }
         labels = {
-            'status': 'Estado de la Asistencia',
+            'status': 'Ingrese el modo en que asistio a la sesión',
         }
