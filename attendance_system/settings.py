@@ -137,7 +137,8 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'recuperacionclaveeifa@gmail.com'  # Aquí pones tu correo de Gmail
 EMAIL_HOST_PASSWORD = 'kinc aeyl ydoq rhzn'
 
-
+# Protocolo y dominio para el email
+DEFAULT_FROM_EMAIL = 'recuperacionclaveeifa@gmail.com'
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
