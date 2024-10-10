@@ -10,6 +10,8 @@ from .models import Attendance, CustomUser
 from django.db.models import Count, Q
 from django.utils import timezone
 from django.contrib import messages
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 # Vista para registro de usuario
@@ -51,6 +53,16 @@ def custom_login_view(request):
 
     return render(request, 'attendance/login.html', {'form': form, 'next': request.GET.get('next','')})
 
+
+# Reseteo de contraseñas
+def enviar_correo(request):
+    send_mail(
+        'Cambio de contraseña EIFA',
+        'Porfavor ingrese al siguiente link para ca',
+        settings.EMAIL_HOST_USER,
+        ['destinatario@correo.com'],
+        fail_silently=False,
+    )
 
 # Vista para cargar regiones según el país seleccionado
 def load_regions(request):

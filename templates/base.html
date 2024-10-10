@@ -44,5 +44,16 @@
         <script src="{% static 'js/dinamic_place.js' %}"></script>
     
         {% block extra_scripts %}{% endblock %}
+        {% if messages %}
+            <div class="container mt-3">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+    
     </body>
     </html>
