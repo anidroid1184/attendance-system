@@ -15,7 +15,7 @@ AE.06.306	Al Madam	Al Madam	12060399
 AE.06.301	Sharjah	Sharjah	12060400
 AE.06.303	Al Hamriyah	Al Hamriyah	12060401
 AE.02.402	Manama	Manama	12060402
-AE.02.403	Masfout	Masfout	12060403
+AE.02.403	Masfut	Masfut	12060403
 AE.06.308	Al Batayih	Al Batayih	12060404
 AE.03.600	Sector 6	Sector 6	13060544
 AE.03.200	Sector 2	Sector 2	13060545
@@ -10501,7 +10501,7 @@ CH.BE.242	Biel/Bienne District	Biel/Bienne District	8260136
 CH.BE.243	Seeland District	Seeland District	8260137
 CH.BE.247	Thun District	Thun District	8260138
 CH.BE.250	Interlaken-Oberhasli District	Interlaken-Oberhasli District	8260139
-CH.BE.241	Canton du Jura	Canton du Jura	8260140
+CH.BE.241	Bernese Jura	Bernese Jura	8260140
 CH.BE.244	Oberaargau	Oberaargau	8260141
 CH.BE.246	Bern-Mittelland District	Bern-Mittelland District	8260142
 CH.TG.2012	Bezirk Frauenfeld	Bezirk Frauenfeld	8260143

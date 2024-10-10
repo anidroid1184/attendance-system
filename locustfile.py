@@ -72,18 +72,21 @@ class UserBehavior(HttpUser):
             else:
                 print(f"Error al iniciar sesión: {response.text}")
 
+
     @task
     def mark_attendance(self):
         """Marca asistencia del usuario autenticado."""
         if self.csrf_token:
+            # Seleccionar aleatoriamente entre 'P' (presencial) y 'V' (virtual)
+            status = random.choice(['P', 'V'])
+
             response = self.client.post("/mark-attendance/", {
-                "status": "P",  # O "V" para virtual
+                "status": status,
                 "csrfmiddlewaretoken": self.csrf_token
             }, headers={"X-CSRFToken": self.csrf_token},
-               allow_redirects=False)
+                                        allow_redirects=False)
 
             if response.status_code == 200 or response.status_code == 302:
-                print(f"Asistencia marcada para: {self.document_id}")
+                print(f"Asistencia marcada como {status} para: {self.document_id}")
             else:
                 print(f"Error al marcar asistencia: {response.text}")
-

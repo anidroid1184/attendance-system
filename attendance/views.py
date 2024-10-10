@@ -10,6 +10,7 @@ from .models import Attendance, CustomUser
 from django.db.models import Count, Q
 from django.utils import timezone
 from django.contrib import messages
+from django.db import IntegrityError
 
 
 # Vista para registro de usuario
@@ -71,6 +72,7 @@ def home(request):
 
 # Vista para registrar asistencia
 
+
 @login_required(login_url='/login/')
 def mark_attendance(request):
     if request.method == 'POST':
@@ -80,18 +82,28 @@ def mark_attendance(request):
             user = request.user
             today = timezone.now().date()
 
-            # Verificar si ya existe un registro de asistencia para el usuario y la fecha
-            attendance, created = Attendance.objects.get_or_create(user=user, date=today)
-            if not created:
-                form.add_error(None, 'Ya has registrado asistencia para hoy.')
-            else:
-                attendance.status = form.cleaned_data['status']
-                attendance.save()
-                return redirect('home')  # Redirigir después de guardar
+            try:
+                # Verificar si ya existe un registro de asistencia para el usuario y la fecha
+                attendance, created = Attendance.objects.get_or_create(user=user, date=today)
+
+                if not created:
+                    # Si ya se ha registrado asistencia para hoy, añadir un error
+                    form.add_error(None, 'Ya has registrado asistencia para hoy.')
+                else:
+                    # Guardar el estado de la asistencia
+                    attendance.status = form.cleaned_data['status']
+                    attendance.save()
+                    messages.success(request, 'Asistencia registrada con éxito.')
+                    return redirect('home')  # Redirigir después de guardar
+
+            except IntegrityError:
+                # Manejar el error de integridad si ocurre (por ejemplo, entradas duplicadas)
+                form.add_error(None, 'Error al registrar la asistencia. Intenta de nuevo.')
 
     else:
         form = AttendanceForm()
 
+    # Si hay un error, mostrar el formulario nuevamente con los errores
     return render(request, 'attendance/mark_attendance.html', {'form': form})
 
 

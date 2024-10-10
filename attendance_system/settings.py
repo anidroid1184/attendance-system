@@ -44,7 +44,9 @@ INSTALLED_APPS = [
 
 # ciudades dinamicas
 CITIES_LIGHT_TRANSLATION_LANGUAGES = ['es', 'en']  # Idiomas que deseas soportar
-CITIES_LIGHT_DATA_PATH = '/path/to/store/data'  # Asegúrate de que la ruta sea correcta y tenga permisos de escritura
+CITIES_LIGHT_DATA_PATH = os.path.join(BASE_DIR, 'data/csv')  # Ruta correcta
+CITIES_LIGHT_DATA_SOURCE = os.path.join(BASE_DIR, 'data/csv')
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
