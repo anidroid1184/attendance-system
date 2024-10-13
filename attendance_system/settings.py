@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
+from decouple import config
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +29,7 @@ SECRET_KEY = 'django-insecure-2u&hj9ghg5rn!sb3v21t)g5mlzt1l)i%#z44fna#)2g)h@f5&o
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False # despues de producción
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['https://attendance-system-ibbh.onrender.com','localhost']
 
 
 # Application definition
@@ -84,14 +87,18 @@ WSGI_APPLICATION = 'attendance_system.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    },
-    'test': {
-        'ENGINE': 'django.db.backends.sqlite3',  # Base de datos para pruebas
-        'NAME': BASE_DIR / "test_db.sqlite3",  # Nombre de la base de datos de prueba
-    },
+    'default': dj_database_url.config(
+        default=config('DATABASE_URL'),
+        engine='django.db.backends.postgresql',
+    )
+   # 'default': {
+   #     'ENGINE': 'django.db.backends.sqlite3',
+   #     'NAME': BASE_DIR / 'db.sqlite3',
+   # },
+   # 'test': {
+   #     'ENGINE': 'django.db.backends.sqlite3',  # Base de datos para pruebas
+   #     'NAME': BASE_DIR / "test_db.sqlite3",  # Nombre de la base de datos de prueba
+   # },
 }
 
 
