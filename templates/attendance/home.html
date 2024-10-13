@@ -1,14 +1,30 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}Inicio{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <h2>Bienvenido al sistema de registro de asistencia de EIFA</h2>
-        <p>Inicia sesión para entrar a la EIFA.</p>
+<!-- Sección principal de bienvenida -->
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <h2>Bienvenido al sistema de registro de asistencia de EIFA</h2>
+            <p>
+                Esta plataforma está diseñada para gestionar y registrar tu asistencia de manera eficiente.
+                Si ya tienes una cuenta, por favor inicia sesión. Si aún no estás registrado, puedes crear una cuenta fácilmente.
+            </p>
+            <!-- Botones de registro e inicio de sesión -->
+            <div class="mt-4">
+                <a href="{% url 'login' %}" class="btn btn-outline-primary btn-lg mx-2">Iniciar Sesión</a>
+                <a href="{% url 'register' %}" class="btn btn-outline-primary btn-lg mx-2">Registrarse</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección del logo en otro contenedor debajo -->
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6 col-lg-8  text-center">
+            <img src="{% static 'img/Eifa_logo.jpg' %}" class="img-fluid" alt="Logo de EIFA" style="max-width: 300px;">
+        </div>
     </div>
 </div>
-
 {% endblock %}
-

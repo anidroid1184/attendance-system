@@ -4,125 +4,134 @@
 {% block title %}Registro de Usuario{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <h2 class="text-center">Registro de Usuario</h2>
-        </div>
-    </div>
+<section class="vh-100">
+    <div class="container-fluid h-custom">
+        <div class="row row-lg-5 d-flex justify-content-center align-items-center h-100">
 
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <form id="register-form" method="POST" action="{% url 'register' %}" data-departments-url="{% url 'ajax_load_regions' %}" data-cities-url="{% url 'ajax_load_cities' %}">
-                {% csrf_token %}
 
-                <!-- Mostrar errores del formulario en la parte superior -->
-                {% if form.errors %}
-                    <div class="alert alert-danger">
-                        <ul>
-                            {% for field in form %}
-                                {% for error in field.errors %}
-                                    <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+
+            <!-- Formulario de registro -->
+            <div class="row-md-5 row-lg-5 row-xl-4 offset-xl-1">
+                <div class="col-md-12">
+                    <h2 class="text-center mb-4">Registrate aquí</h2>
+                </div>
+
+                <form id="register-form" method="POST" action="{% url 'register' %}"
+                      data-departments-url="{% url 'ajax_load_regions' %}"
+                      data-cities-url="{% url 'ajax_load_cities' %}">
+                    {% csrf_token %}
+
+                    <!-- Mostrar errores del formulario en la parte superior -->
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <ul>
+                                {% for field in form %}
+                                    {% for error in field.errors %}
+                                        <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                                    {% endfor %}
                                 {% endfor %}
-                            {% endfor %}
-                            {% for error in form.non_field_errors %}
-                                <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
+                                {% for error in form.non_field_errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    <!-- Campo nombre completo -->
+                    <div class="mb-3">
+                        <label for="id_full_name" class="form-label">Ingrese su nombre completo</label>
+                        {{ form.full_name|add_class:"form-control" }}
+                        <small id="nameHelpBlock" class="form-text text-muted">
+                           Ingrese tanto nombres como apellidos.
+                        </small>
                     </div>
-                {% endif %}
 
-                <!-- Campo nombre de usuario -->
-                <div class="mb-3">
-                    <label for="id_full_name" class="form-label">Ingrese su nombre completo</label>
-                    {{ form.full_name|add_class:"form-control" }}
-                    <small id="nameHelpBlock" class="form-text text-muted">
-                       Ingrese tanto nombres como apellidos.
-                    </small>
-                </div>
-
-                <!-- Campo correo electrónico -->
-                <div class="mb-3">
-                    <label for="id_email" class="form-label">Correo Electrónico</label>
-                    {{ form.email|add_class:"form-control" }}
-                    <small id="emailHelp" class="form-text text-muted">
-                        Ingrese su correo electrónico. Este solo será usado para el registro.
-                    </small>
-                </div>
-
-                <!-- Campo documento de identidad -->
-                <div class="mb-3">
-                    <label for="id_document_id" class="form-label">Ingrese su documento de identidad</label>
-                    {{ form.document_id|add_class:"form-control" }}
-                    <small id="documentIdHelpBlock" class="form-text text-muted">
-                        Ingrese su documento de identidad en números. Este campo es único para cada usuario.
-                    </small>
-                </div>
-
-                <!-- Campo país -->
-                <div class="mb-3">
-                    <label for="id_country" class="form-label">Seleccione su país de residencia</label>
-                    {{ form.country|add_class:"form-select" }}
-                </div>
-
-                <!-- Campo región -->
-                <div class="mb-3">
-                    <label for="id_region" class="form-label">Seleccione su región de residencia</label>
-                    {{ form.region|add_class:"form-select" }}
-                </div>
-
-                <!-- Campo ciudad -->
-                <div class="mb-3">
-                    <label for="id_city" class="form-label">Seleccione su ciudad de residencia</label>
-                    {{ form.city|add_class:"form-select" }}
-                    <small id="cityHelpBlock" class="form-text text-muted">
-                        Si no aparece en la lista de selección, este campo es opcional y puede continuar con el registro.
-                    </small>
-                </div>
-
-                <!-- Contraseña -->
-                <div class="mb-3">
-                    <label for="id_password1" class="form-label">Contraseña</label>
-                    {{ form.password1|add_class:"form-control" }}
-                    <small id="passwordHelpBlock" class="form-text text-muted">
-                        Tu contraseña debe tener entre 8 y 20 caracteres, contener letras y números. No debe contener espacios ni emojis.
-                    </small>
-                </div>
-
-                <div class="mb-3">
-                    <label for="id_password2" class="form-label">Confirmar Contraseña</label>
-                    {{ form.password2|add_class:"form-control" }}
-                    <small id="confirmPasswordHelpBlock" class="form-text text-muted">
-                       Ingrese nuevamente la contraseña para confirmarla. Debe ser exactamente igual a la anterior.
-                    </small>
-                </div>
-
-                <!-- Campo política de tratamiento -->
-                <div class="mb-3">
-                    <div class="card p-3">
-                        <p class="text-justify">
-                            <strong>La Universidad del Valle, sede Cartago</strong> informa que este formulario recolecta información de los asistentes a la EIFA 2024:
-                            <em>"La ingeniería para los retos del siglo XXI"</em>. Los datos aquí registrados serán tratados de acuerdo a lo establecido en la Ley 1581 del 2012.
-                            Le informamos que los datos que usted suministre serán tratados conforme a nuestra
-                            <strong>Política de Protección de Datos Personales</strong>, con el objetivo de poner en conocimiento del titular del dato la regulación interna adoptada por la Universidad del Valle.
-                        </p>
+                    <!-- Campo correo electrónico -->
+                    <div class="mb-3">
+                        <label for="id_email" class="form-label">Correo Electrónico</label>
+                        {{ form.email|add_class:"form-control" }}
+                        <small id="emailHelp" class="form-text text-muted">
+                            Ingrese su correo electrónico. Este solo será usado para el registro.
+                        </small>
                     </div>
-                    <br>
-                    <label for="id_policy_accept" class="form-label mt-3">¿Acepta la política de tratamiento de datos?</label>
-                    <br>
-                    <div class="form-check form-check-inline">
-                        {{ form.policy_accept.as_widget }}
-                    </div>
-                </div>
 
-                <!-- Botón para enviar -->
-                <div class="text-center mt-4">
-                    <button type="submit" class="btn btn-danger">Registrarse</button>
-                </div>
-            </form>
+                    <!-- Campo documento de identidad -->
+                    <div class="mb-3">
+                        <label for="id_document_id" class="form-label">Ingrese su documento de identidad</label>
+                        {{ form.document_id|add_class:"form-control" }}
+                        <small id="documentIdHelpBlock" class="form-text text-muted">
+                            Ingrese su documento de identidad en números. Este campo es único para cada usuario.
+                        </small>
+                    </div>
+
+                    <!-- Campo país -->
+                    <div class="mb-3">
+                        <label for="id_country" class="form-label">Seleccione su país de residencia</label>
+                        {{ form.country|add_class:"form-select" }}
+                    </div>
+
+                    <!-- Campo región -->
+                    <div class="mb-3">
+                        <label for="id_region" class="form-label">Seleccione su región de residencia</label>
+                        {{ form.region|add_class:"form-select" }}
+                    </div>
+
+                    <!-- Campo ciudad -->
+                    <div class="mb-3">
+                        <label for="id_city" class="form-label">Seleccione su ciudad de residencia</label>
+                        {{ form.city|add_class:"form-select" }}
+                        <small id="cityHelpBlock" class="form-text text-muted">
+                            Si no aparece en la lista de selección, este campo es opcional y puede continuar con el registro.
+                        </small>
+                    </div>
+
+                    <!-- Contraseña -->
+                    <div class="mb-3">
+                        <label for="id_password1" class="form-label">Contraseña</label>
+                        {{ form.password1|add_class:"form-control" }}
+                        <small id="passwordHelpBlock" class="form-text text-muted">
+                            Tu contraseña debe tener entre 8 y 20 caracteres, contener letras y números. No debe contener espacios ni emojis.
+                        </small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_password2" class="form-label">Confirmar Contraseña</label>
+                        {{ form.password2|add_class:"form-control" }}
+                        <small id="confirmPasswordHelpBlock" class="form-text text-muted">
+                           Ingrese nuevamente la contraseña para confirmarla. Debe ser exactamente igual a la anterior.
+                        </small>
+                    </div>
+
+                    <!-- Campo política de tratamiento -->
+                    <div class="mb-3">
+                        <div class="card p-3">
+                            <p class="text-justify">
+                                <strong>La Universidad del Valle, sede Cartago</strong> informa que este formulario recolecta información de los asistentes a la EIFA 2024:
+                                <em>"La ingeniería para los retos del siglo XXI"</em>. Los datos aquí registrados serán tratados de acuerdo a lo establecido en la Ley 1581 del 2012.
+                                Le informamos que los datos que usted suministre serán tratados conforme a nuestra
+                                <strong>Política de Protección de Datos Personales</strong>, con el objetivo de poner en conocimiento del titular del dato la regulación interna adoptada por la Universidad del Valle.
+                            </p>
+                        </div>
+                        <label for="id_policy_accept" class="form-label mt-3">¿Acepta la política de tratamiento de datos?</label>
+                        <div class="form-check form-check-inline">
+                            <br>
+                            {{ form.policy_accept.as_widget }}
+                        </div>
+                    </div>
+
+                    <!-- Botón para enviar -->
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-outline-primary">Registrarse</button>
+                    </div>
+                </form>
+            </div>
+                        <!-- Imagen del logo -->
+            <div class="row-md-3 row-lg-3 row-xl-3 text-center mb-4">
+                <img src="{% static 'img/Eifa_logo.jpg' %}" class="img-fluid" alt="Logo">
+            </div>
         </div>
     </div>
-</div>
+</section>
 
 <!-- Cargar el archivo custom.js para manejar las solicitudes AJAX -->
 <script src="{% static 'js/dinamic_place.js' %}"></script>

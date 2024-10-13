@@ -15,7 +15,7 @@
             <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
                 <form method="POST" action="{% url 'login' %}">
                     {% csrf_token %}
-                    
+
                     <!-- Mostrar errores generales -->
                     {% if form.non_field_errors %}
                     <div class="alert alert-danger" role="alert">
@@ -27,7 +27,7 @@
                     </div>
                     {% endif %}
                     <div class="col-md-12 col-lg-12 col-xl-12 ">
-                        <h2 class="text-center">Registro de Usuario</h2>
+                        <h2 class="text-center">Iniciá sesión aquí</h2>
                     </div>
                     <!-- Documento de identidad -->
                     <div class="form-outline mb-4">
@@ -45,18 +45,18 @@
 
                     <!-- Recordarme y Olvidé contraseña -->
                     <div class="d-flex justify-content-between align-items-center mb-4">
-                        <a href="{% url 'password_reset' %}" class="text-muted">¿Olvidaste tu contraseña?</a>
+                        <a href="{% url 'password_reset' %}" class="link-primary">¿Olvidaste tu contraseña?</a>
                     </div>
 
                     <!-- Botón de iniciar sesión -->
                     <div class="text-center text-lg-start mt-4 pt-2">
                         <input type="hidden" name="next" value="{{ next }}">
-                        <button type="submit" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;">Iniciar Sesión</button>
+                        <button type="submit" class="btn btn-outline-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;">Iniciar Sesión</button>
                     </div>
 
                     <!-- Registro -->
                     <p class="small fw-bold mt-2 pt-1 mb-0 text-center">
-                        ¿No tienes una cuenta? <a href="{% url 'register' %}" class="link-danger">Regístrate</a>
+                        ¿No tienes una cuenta? <a href="{% url 'register' %}" class="link-primary">Regístrate</a>
                     </p>
                 </form>
             </div>
