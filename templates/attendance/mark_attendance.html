@@ -14,7 +14,7 @@
         <div class="col-md-6">
             <form method="POST">
                 {% csrf_token %}
-                
+
                 <!-- Mostrar errores si los hay -->
                 {% if form.errors %}
                     <div class="alert alert-danger">
@@ -30,12 +30,12 @@
                         </ul>
                     </div>
                 {% endif %}
-                
+
                 <!-- Formulario de asistencia -->
                 {{ form.as_p }}
-                
+
                 <!-- Botón de envío -->
-                <button type="submit" class="btn btn-danger">Marcar Asistencia</button>
+                <button type="submit" class="btn btn-primary">Marcar Asistencia</button>
             </form>
         </div>
     </div>

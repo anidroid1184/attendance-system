@@ -1,52 +1,67 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load custom_filters %}
 {% block title %}Iniciar Sesión{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <h2 class="text-center mb-4">Iniciar Sesión</h2>
-            <form method="POST" action="{% url 'login' %}">
-                {% csrf_token %}
-                <!-- Mostrar errores generales -->
-                {% if form.non_field_errors %}
-                <div class="alert alert-danger" role="alert">
-                    <ul>
-                        {% for error in form.non_field_errors %}
-                        <li>{{ error }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                {% endif %}
-                
-                <!-- Documento de identidad -->
-                <div class="mb-3">
-                    <label for="id_document_id" class="form-label">Documento de Identidad</label>
-                    {{ form.document_id|add_class:"form-control" }}
-                    <small class="form-text text-muted">
-                        Ingrese su documento de identidad registrado.
-                    </small>
-                </div>
+<section class="vh-100">
+    <div class="container-fluid h-custom">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <!-- Imagen del logo -->
+            <div class="col-md-9 col-lg-6 col-xl-5">
+                <img src="{% static 'img/Eifa_logo.jpg' %}" class="img-fluid" alt="Logo">
+            </div>
+            <!-- Formulario de inicio de sesión -->
+            <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+                <form method="POST" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    
+                    <!-- Mostrar errores generales -->
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                        <ul>
+                            {% for error in form.non_field_errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                    <div class="col-md-12 col-lg-12 col-xl-12 ">
+                        <h2 class="text-center">Registro de Usuario</h2>
+                    </div>
+                    <!-- Documento de identidad -->
+                    <div class="form-outline mb-4">
+                        {{ form.document_id|add_class:"form-control form-control-lg" }}
+                        <label class="form-label" for="id_document_id">Documento de Identidad</label>
+                        <small class="form-text text-muted">Ingrese su documento de identidad registrado.</small>
+                    </div>
 
-                <!-- Contraseña -->
-                <div class="mb-3">
-                    <label for="id_password" class="form-label">Contraseña</label>
-                    {{ form.password|add_class:"form-control"}}
-                    <small class="form-text text-muted">
-                        Introduzca la contraseña que registró.
-                    </small>
-                </div>
+                    <!-- Contraseña -->
+                    <div class="form-outline mb-3">
+                        {{ form.password|add_class:"form-control form-control-lg" }}
+                        <label class="form-label" for="id_password">Contraseña</label>
+                        <small class="form-text text-muted">Introduzca la contraseña que registró.</small>
+                    </div>
 
-                <div class="text-center mt-3">
-                    <a href="{% url 'password_reset' %}" class="text-muted">¿Olvidaste tu contraseña?</a>
-                </div>
-                <!--Redirigir a mark attendance-->
-                <input type="hidden" name="next" value="{{ next}}">
-                <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                    <!-- Recordarme y Olvidé contraseña -->
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <a href="{% url 'password_reset' %}" class="text-muted">¿Olvidaste tu contraseña?</a>
+                    </div>
 
-            </form>
+                    <!-- Botón de iniciar sesión -->
+                    <div class="text-center text-lg-start mt-4 pt-2">
+                        <input type="hidden" name="next" value="{{ next }}">
+                        <button type="submit" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;">Iniciar Sesión</button>
+                    </div>
+
+                    <!-- Registro -->
+                    <p class="small fw-bold mt-2 pt-1 mb-0 text-center">
+                        ¿No tienes una cuenta? <a href="{% url 'register' %}" class="link-danger">Regístrate</a>
+                    </p>
+                </form>
+            </div>
         </div>
     </div>
-</div>
+
+</section>
 {% endblock %}
