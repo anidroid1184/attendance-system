@@ -46,8 +46,8 @@ INSTALLED_APPS = [
 
 # ciudades dinamicas
 CITIES_LIGHT_TRANSLATION_LANGUAGES = ['es', 'en']  # Idiomas que deseas soportar
-CITIES_LIGHT_DATA_PATH = os.path.join(BASE_DIR, 'data/csv')  # Ruta correcta
-CITIES_LIGHT_DATA_SOURCE = os.path.join(BASE_DIR, 'data/csv')
+CITIES_LIGHT_DATA_PATH = os.path.join(BASE_DIR, 'data')  # Ruta correcta
+CITIES_LIGHT_DATA_SOURCE = os.path.join(BASE_DIR, 'data')
 
 
 MIDDLEWARE = [
@@ -88,6 +88,11 @@ WSGI_APPLICATION = 'attendance_system.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
+    #'default': dj_database_url.config(
+    #    default='postgres://postgres:password@localhost:5432/mydatabase',
+    #    engine='django.db.backends.postgresql',
+    #)
+    #'default': dj_database_url.config(default=os.environ.get('DATABASE_URL', 'postgresql://postgres:XcnSsipNWIPFILYjalBWGnXmLtpRncIQ@postgres.railway.internal:5432/railway')),
     'default': dj_database_url.config(default=os.environ.get('DATABASE_URL')),
     #'default': {
     #    'ENGINE': 'django.db.backends.sqlite3',
