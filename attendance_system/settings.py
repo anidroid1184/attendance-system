@@ -87,14 +87,10 @@ WSGI_APPLICATION = 'attendance_system.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(default=os.environ.get('DATABASE_URL')),
-    # 'default': {
-   #     'ENGINE': 'django.db.backends.sqlite3',
-   #     'NAME': BASE_DIR / 'db.sqlite3',
-   # },
-   # 'test': {
-   #     'ENGINE': 'django.db.backends.sqlite3',  # Base de datos para pruebas
-   #     'NAME': BASE_DIR / "test_db.sqlite3",  # Nombre de la base de datos de prueba
-   # },
+    #'default': {
+    #    'ENGINE': 'django.db.backends.sqlite3',
+    #    'NAME': BASE_DIR / 'db.sqlite3',
+    #},
 }
 
 
