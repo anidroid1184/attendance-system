@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 import dj_database_url
-from decouple import config
 from django.contrib import staticfiles
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -24,12 +23,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-2u&hj9ghg5rn!sb3v21t)g5mlzt1l)i%#z44fna#)2g)h@f5&o'
+SECRET_KEY = os.environ.get('SECRET_KEY','django-insecure-2u&hj9ghg5rn!sb3v21t)g5mlzt1l)i%#z44fna#)2g)h@f5&o')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False # despues de producción
+DEBUG = os.environ.get('DEBUG', 'False') == 'True' # para produccion
 
-ALLOWED_HOSTS = ['https://attendance-system-ibbh.onrender.com','localhost']
+ALLOWED_HOSTS = ['attendance-system-ibbh.onrender.com','localhost']
 
 
 # Application definition
@@ -87,11 +86,8 @@ WSGI_APPLICATION = 'attendance_system.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default=config('DATABASE_URL'),
-        engine='django.db.backends.postgresql',
-    )
-   # 'default': {
+    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL')),
+    # 'default': {
    #     'ENGINE': 'django.db.backends.sqlite3',
    #     'NAME': BASE_DIR / 'db.sqlite3',
    # },
